@@ -12,7 +12,7 @@ LDLIBS=-lcfitsio -pthread -ljpeg -lm
 jpgtofits: $(objects) 
 	@$(CC) -o jpgtofits $(objects) $(LDLIBS) 
 	@rm *.o
-	./jpgtofits -f -ib.jpg
+#	./jpgtofits -f -ib.jpg
 
 .SILENT: $(objects)
 

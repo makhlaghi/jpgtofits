@@ -1,0 +1,25 @@
+JPGtoFITS NEWS                                    -*- outline -*-
+
+
+
+* Noteworthy changes in release 0.1 (2014-11-21) [stable]
+
+** Bug fixes
+
+** New features
+
+  Complying with GNU standards.
+
+  Configuring, compiling and making are now done with GNU Autoconf and
+  GNU Automake.
+
+  Using argp.h for parsing arguments.
+
+** Changes in behavior
+
+  Long options are added for particular settings.
+
+** Improvements
+
+  The usability is significantly enhanced with the addition of GNU
+  Autotools and argp.h argument parsing.

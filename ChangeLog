@@ -1,0 +1,36 @@
+2014-11-21  Mohammad Akhlaghi  <makhlaghi@gmail.com>
+
+	Version 0.1: Complying with GNU coding standards.
+	
+	* src/ui.h: Unified copyright and changed function name.
+
+	* src/ui.c: Unified copyright,
+	(checkremoveoutimage): Corrected error message.
+	(checkinimage): Corrected error message.
+	(findnamebase): Added removenamedir argument.
+	(checkint): Removed.
+	(checkintlimit): Removed.
+	(printversioninfo): Removed.
+	(printhelp): Removed.
+	(prepareparams): Removed.
+	(setparams): Added. Using arpg.h infrastructure.
+
+	* src/readjpg.h: Unified copyright.
+
+	* src/readjpg.c: Unified copyright.
+
+	* src/main.h: Unified copyright, added `removenamedir` to the
+	mainparams structure.
+
+	* src/main.c: Unified copyright, changed `setparams()` name.
+
+	* src/Makefile.am: Added.
+
+	* configure.ac: Added.
+
+	* Makefile.am: Added
+
+	* AUTHORS: Added.
+
+	* NEWS: Added.
+

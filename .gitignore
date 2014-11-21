@@ -1,0 +1,15 @@
+*~
+*.o
+*.log
+*.trs
+*.fits
+stamp-h1
+*.tar.gz
+Makefile
+jpgtofits
+
+config.h
+config.log
+src/.deps/
+config.status
+autom4te.cache/

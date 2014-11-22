@@ -1,5 +1,7 @@
 2014-11-22  Mohammad Akhlaghi  <makhlaghi@gmail.com>
 
+	* README: Added `Manual and documentation`.
+
 	* src/Makefile.am: Added anothername.sh as another test.
 
 	* doc/jpgtofits.texi: Added Texinfo documentation.

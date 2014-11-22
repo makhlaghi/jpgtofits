@@ -307,9 +307,9 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-SUBDIRS = src
+SUBDIRS = src doc
 dist_doc_DATA = README
-EXTRA_DIST = src/autumnintohoku.jpg src/simple.sh
+EXTRA_DIST = src/autumnintohoku.jpg src/simple.sh src/anothername.sh
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

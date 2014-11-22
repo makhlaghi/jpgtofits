@@ -1,0 +1,724 @@
+This is jpgtofits.info, produced by makeinfo version 5.2 from
+jpgtofits.texi.
+
+This manual is for JPGtoFITS (version 0.1, 22 November 2014) a highly
+customizable program to convert each color channel of a JPEG image into
+a FITS image extension.
+
+   Copyright © 2014 Mohammad Akhlaghi.  <akhlaghi@astr.tohoku.ac.jp>
+
+     Permission is granted to copy, distribute and/or modify this
+     document under the terms of the GNU Free Documentation License,
+     Version 1.3 or any later version published by the Free Software
+     Foundation; with no Invariant Sections, with no Front-Cover Texts,
+     and with no Back-Cover Texts.  A copy of the license is available
+     on <http://www.gnu.org/copyleft/fdl.html>.
+INFO-DIR-SECTION Astronomy
+START-INFO-DIR-ENTRY
+* JPGtoFITS: (jpgtofits).  Convert a JPG image to a FITS image.
+END-INFO-DIR-ENTRY
+
+
+File: jpgtofits.info,  Node: Top,  Next: Overview,  Prev: (dir),  Up: (dir)
+
+JPGtoFITS
+*********
+
+JPGtoFITS is a tool to convert each color channel of a JPEG image to a
+FITS image extension.  Currently it is a very small program, but there
+is lots of potential for future improvements.  See *note Overview:: for
+more details.
+
+   Like the program, this manual will be constantly upgraded, so there
+might always be unwanted errors or parts of the text that can be
+explained better.  We would be most grateful if you could inform us if
+you spot any such cases.
+
+* Menu:
+
+* Overview::                    An over view and quick start guide.
+* Installation::                Detailed installation guide.
+* Running::                     How to run with options.
+* Future updates::              List of future updates.
+* Index::                       Index of terms used.
+
+ — The Detailed Node Listing —
+
+Overview
+
+* Quick start::                 A quick start guide.
+* FITSJPEGcolor::               Explanations about the FITS and JPEG standards.
+* Free software::               JPGtoFITS is free software.
+
+Installation
+
+* Requirements::                JPGtoFITS requirements
+* Installing JPGtoFITS::        Installing JPGtoFITS
+
+Requirements
+
+* libjpeg::                     About and installation of libjpeg.
+* CFITSIO::                     About and installation of CFITSIO.
+
+Installing JPGtoFITS
+
+* Configuring::                 How to configure JPGtoFITS.
+* Tests::                       Test programs.
+* Print manual::                How to rebuild the print manual.
+
+Running JPGtoFITS
+
+* Getting help::                Guidelines on getting help.
+* Command line options::        Command line options.
+
+Command line options
+
+* Options::                     Command line options for JPGtoFITS
+
+
+
+File: jpgtofits.info,  Node: Overview,  Next: Installation,  Prev: Top,  Up: Top
+
+1 Overview
+**********
+
+The FITS image standard is the primary method that data are archived and
+used in astronomy.  On the other hand, one of the most convenient
+standards to view images on the computer or in print is the JPEG
+standard.  JPGtoFITS was build to be a simple and fast command line
+converter (with various options for specialized behavior) from the
+latter to the former.  Some of the benefits provided by JPGtoFITS are:
+
+   • Very few dependencies: installed easily
+
+   • Very fast processing.
+
+   • Save each color channel of the JPEG image into one extension of the
+     output FITS image.
+
+   • Uses the most basic command line tools available in any GNU/Linux
+     system, so it can easily be run on a large number of images.
+
+* Menu:
+
+* Quick start::                 A quick start guide.
+* FITSJPEGcolor::               Explanations about the FITS and JPEG standards.
+* Free software::               JPGtoFITS is free software.
+
+
+File: jpgtofits.info,  Node: Quick start,  Next: FITSJPEGcolor,  Prev: Overview,  Up: Overview
+
+1.1 Quick start
+===============
+
+Lets assume you have just downloaded the ‘jpgtofits-0.1.tar.gz’ in
+‘DOWLD’.  Running the following commands will unpack, compile, check and
+install JPGtoFITS so you can use it anywhere in your system.  Note lines
+starting with ‘$’ should be run as a user and those with ‘#’ as root.
+In either case, these two characters should not be typed in the command
+line.
+
+     $ cd DOWLD
+     $ tar -zxvf jpgtofits-0.1.tar.gz
+     $ cd jpgtofits-0.1
+     $ ./configure
+     $ make
+     $ make check
+     $ su
+     # make install
+
+If ‘$ ./configure’ complains about a requirement, see *note
+Installation::.  After running ‘$ make check’, a few tests will be done
+on a small test FITS image provided with the source code.  They
+shouldn’t fail, if they do please file a bug report.  You can see the
+output ‘.jpg’ images in ‘DOWLD/jpgtofits-0.1/src/’.
+
+   Once it is installed, you can convert a JPEG image named
+‘JPEGimage.jpg’ to JPEG with the default settings by running ‘$
+jpgtofits JPEGimage.jpg’ on the command line.  The FITS image will be
+named ‘JPEGimage.fits’ in the current directory.  To see all the options
+at any time, run ‘$ jpgtofits --help’ or ‘$ jpgtofits -?’.  *Note
+Running::, for a detailed explanation on the command line options.
+Finally, you can access this whole manual anywhere on the command line
+with ‘info jpgtofits’.
+
+
+File: jpgtofits.info,  Node: FITSJPEGcolor,  Next: Free software,  Prev: Quick start,  Up: Overview
+
+1.2 FITS, JPEG and color spaces
+===============================
+
+It is necessary to provide some background information on FITS images,
+JPEG images and color spaces in general, but here only the most general
+topics can be discussed.  Therefore we just suffice to this short
+section.  For the intricacies of the FITS standard, the interested
+reader can read the FITS standard (3.0)
+(http://labs.adsabs.harvard.edu/adsabs/abs/2010A%26A...524A..42P/).  For
+the fascinating details of color spaces, please see the Wikipedia entry
+(http://en.wikipedia.org/wiki/Color_space).
+
+   An image is a two dimensional array of small 2 dimensional elements
+called pixels.  If each pixel only has one value, the image is known as
+a grayscale image and no color is defined.  The range of values in the
+image can be interpreted as shades of any color, it is customary to use
+shades of black or grayscale.  However, to produce the color spectrum in
+the digital world, we need to mix several primary colors.  Therefore in
+a color image, each pixel has several values depending on how many
+primary colors we choose.  For example on the digital monitor or a color
+digital cameras, all colors are built by mixing the three colors of
+Red-Green-Blue (RGB) with various proportions.  However, for printing on
+paper, standard printers use the Cyan-Magenta-Yellow-Key (CMYK,
+Key=black) color space.  Therefore when printing an RGB image, usually a
+transformation of color spaces will be necessary.
+
+   In a colored digital camera, a color image is produced by dividing
+pixel’s area between three colors (filters).  However in astronomy due
+to the intrinsic faintness of most of our targets, the collecting area
+of the pixel is very important for us.  Hence the full area of the pixel
+is used and one value is stored for that pixel in the end.  One filter
+is used for the whole image.  Thus each FITS image extension is
+inherently a grayscale image and no color can be defined for it.
+
+   So to convert a potentially colored JPEG image to a FITS image, each
+color should be placed in one FITS extension.  This explains why
+JPGtoFITS separates the colors into multiple extensions.  Also Note that
+the most common form the JPEG standard usage is to assign 8-bit to each
+color.  Therefore, once converted to FITS, each color’s pixel values
+will be in the range of 0 to 2^8-1=255.
+
+
+File: jpgtofits.info,  Node: Free software,  Prev: FITSJPEGcolor,  Up: Overview
+
+1.3 Free software
+=================
+
+JPGtoFITS is distributed and available to you under the GNU public
+license (http://www.gnu.org/copyleft/gpl.html) version 3 or any later
+version (GPL v3+).  Free software and tools (as defined in GPL v3+) is
+essential for critical science to flourish.  A very large number of
+packages (scientific and unscientific) use this license for
+distribution.  Therefore if you are not already familiar with it, we
+strongly encourage you to put the time and read through it once.  It
+gives you a lot of _free_doms.  As with all kinds of freedom unless you
+utilize your freedom, you cannot consider your self to be free.
+
+
+File: jpgtofits.info,  Node: Installation,  Next: Running,  Prev: Overview,  Up: Top
+
+2 Installation
+**************
+
+To successfully install JPGtoFITS you have to have the requirements
+already installed on your system.  They are very basic and you might
+already have them installed, to check try running the ‘$ ./configure’
+script.  If you get no errors, then you already have them and you can
+skip *note Requirements::.  You can do much more than the simple set of
+scripts in *note Quick start::, to learn more, see *note Installing
+JPGtoFITS::.
+
+* Menu:
+
+* Requirements::                JPGtoFITS requirements
+* Installing JPGtoFITS::        Installing JPGtoFITS
+
+
+File: jpgtofits.info,  Node: Requirements,  Next: Installing JPGtoFITS,  Prev: Installation,  Up: Installation
+
+2.1 Requirements
+================
+
+JPGtoFITS 0.1 has two dependencies: libjpeg and CFITSIO. The first is
+for manipulating JPEG images and the second for FITS images.
+
+* Menu:
+
+* libjpeg::                     About and installation of libjpeg.
+* CFITSIO::                     About and installation of CFITSIO.
+
+
+File: jpgtofits.info,  Node: libjpeg,  Next: CFITSIO,  Prev: Requirements,  Up: Requirements
+
+2.1.1 libjpeg
+-------------
+
+libjpeg (http://www.ijg.org/) is a very basic library that provides
+tools to read and write JPEG images, most of the GNU/Linux graphic
+programs and libraries use it.  Therefore you most probably already have
+it installed.  libjpeg-turbo (http://libjpeg-turbo.virtualgl.org/) is an
+alternative to libjpeg.  It uses SIMD instructions for ARM based systems
+that significantly decreases the processing time of JPEG compression and
+decompression algorithms.
+
+   If ‘$ ./configure’ fails to find libjpeg, then you have to install
+one of the two libraries above.  They should be available within your
+distribution’s package management tools, for example
+
+   • ‘# pacman -S libjpeg’ in Arch Linux (which installs libjpeg-turbo).
+
+   • ‘# apt-get install libjpeg’ in Ubuntu.
+
+   • ‘# yum install libjpeg’ in Fedora, CentOS, Scientific linux or
+     generally any Red Hat based GNU/Linux.
+
+
+File: jpgtofits.info,  Node: CFITSIO,  Prev: libjpeg,  Up: Requirements
+
+2.1.2 CFITSIO
+-------------
+
+CFITSIO is the closest you can get to the pixels in a FITS image while
+remaining faithful to the FITS standard
+(http://fits.gsfc.nasa.gov/fits_standard.html).  It is written by
+William Pence, the author of the FITS standard (3.0)
+(http://labs.adsabs.harvard.edu/adsabs/abs/2010A%26A...524A..42P/), and
+is regularly updated.  Setting the definitions for all other software
+packages using FITS images.
+
+   Some GNU/Linux distributions have CFITSIO in their package managers
+(for example Arch Linux), if it is available and updated, you can use
+it.  If not, you can install it from source, in this case, we strongly
+recommend that you have a look through Chapter 2 (Creating the CFITSIO
+library) of the the CFITSIO manual and understand the options you can
+pass to ‘$ ./configure’.  This is a very basic package for most
+astronomical software and it is best that you configure it nicely with
+your system.  To install CFITSIO from source, you have to download the
+latest version
+(ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/cfitsio_latest.tar.gz),
+uncompress it and go into the downloaded directory.  Since CFITSIO also
+uses GNU Autoconf and GNU Automake, the installation is very similar to
+that explained in *note Installing JPGtoFITS::.
+
+
+File: jpgtofits.info,  Node: Installing JPGtoFITS,  Prev: Requirements,  Up: Installation
+
+2.2 Installing JPGtoFITS
+========================
+
+This section is basically a longer explanation to the sequence of
+commands given in *note Quick start::.  If the default parameters are
+fine for your applications, or you are already familiar with those
+commands, or you don’t want to remake this manual, you can skip this
+section.
+
+   In the following we will assume that you have downloaded the
+compressed source file, ‘jpgtofits-0.1.tar.gz’, to the ‘DOWLD’ (short
+for download) directory, replace this name with the directory that you
+want to run the installation in.  Note that after installation, if you
+don’t plan to re-install you no longer need this file or the
+uncompressed directory.  The first three steps in *note Quick start::
+need no extra explanation so in the following we also assume they are
+done.  Once you uncompress the source file the directory
+‘DOWLD/jpgtofits-0.1’ will be created.  From now on, we will call this
+directory ‘SCRDIR’.
+
+   JPGtoFITS uses GNU Autoconf and GNU Automake to configure and build
+its self in your particular system.  These tools are highly customizable
+to fit any kind of system.  A complete explanation is beyond the scope
+of this manual but enough acquaintance with these tools will
+significantly enhance your life in the GNU/Linux ecosystem.
+
+   JPGtoFITS has been written and only tested on GNU/Linux, I am curious
+to see if it is possible to install it on other systems (for example Mac
+OS or MS-Windows) too.  However, I don’t have and use such proprietary
+operating systems.  So if you would like it there and are willing to
+help, please contact me, see *note Future updates::.
+
+* Menu:
+
+* Configuring::                 How to configure JPGtoFITS.
+* Tests::                       Test programs.
+* Print manual::                How to rebuild the print manual.
+
+
+File: jpgtofits.info,  Node: Configuring,  Next: Tests,  Prev: Installing JPGtoFITS,  Up: Installing JPGtoFITS
+
+2.2.1 Configuring
+-----------------
+
+The ‘$ ./configure’ step is the most important step in the build
+process.  All the required packages, libraries, headers and environment
+variables are checked in this step.  The behaviors of make and make
+install can also be set through command line options to this command.  A
+complete explanation of these options is beyond the scope of this short
+manual.  But we will try to review the most important cases.
+
+   In case you do not have super user or root access to the system, you
+can’t take the last two steps of the command sequence in *note Quick
+start::.  To be able to access the built ‘fitstojpg’ executable file
+from anywhere, you have to specify special directory in your owned
+directories, for example ‘MYUSR’, and tell configure to install the
+compiled file to this directory through the command:
+
+     $ ./configure --prefix=MYUSR
+
+You will also have to add ‘MYUSR’ to your ‘PATH’ environment variable.
+If you have a specific file for ‘MYUSR’, you can do this for all
+programs that use the GNU build system, not just JPGtoFITS.
+
+
+File: jpgtofits.info,  Node: Tests,  Next: Print manual,  Prev: Configuring,  Up: Installing JPGtoFITS
+
+2.2.2 Tests
+-----------
+
+Currently two simple tests and a very small JPEG image I took in autumn
+of a beautiful red tree infront of the Tohoku University Astronomical
+Institute is also included in the downloaded package: ‘SRCDIR/src/’.
+The test scripts are all the files ending with ‘.sh’ and they all run on
+the JPEG file ‘autumnintohoku.jpg’.  You can run the tests after you
+have built the package (using ‘$ make’) with the command:
+
+     $ make check
+
+   If you are using a sufficiently modern terminal, the outcome of the
+tests will be either colored green, showing that all the tests passed
+successfully, or red showing that at least one test failed.  None of the
+tests should fail.  If any does fail, please inform us so we see what
+the problem was.
+
+   By examining the ‘.sh’ test scripts, you can see some example of how
+JPGtoFITS is best used.  Note that when running the test scripts, you
+haven’t installed JPGtoFITS yet, that is why it is called with the
+‘./jpgtofits’.  After you install it, you don’t need the preceding ‘./’.
+To be more educative, we have also only used the long format of the
+options, when typing on the command line, it might be easier for you to
+use the short formats.  Generally, when writing a script (that you will
+save for future use) it is advised to use the long formats of the
+options, because the short ones will soon be forgotten.
+
+   The tests will be increased in time to include all the capabilities
+of JPGtoFITS. So if the tests pass, you can safely install the JPGtoFITS
+on a system-wide directory.
+
+
+File: jpgtofits.info,  Node: Print manual,  Prev: Tests,  Up: Installing JPGtoFITS
+
+2.2.3 Print manual
+------------------
+
+The default print manual is provided in the letter paper size.  If you
+would like to have the print version of this manual on paper and you are
+living in a country which uses A4, then you can rebuild the manual for
+your local paper size.  The great thing about the GNU build system is
+that the manual source code which is in Texinfo is also distributed with
+the program source code, enabling you to do such customizations
+(hackings).
+
+   In order to change the paper size, you will need to have TeX
+installed.  Open the ‘SRCDIR/doc/fitstojpg.texi’ with any text editor.
+This is the source file that created this manual.  In the first few
+lines you will see this line:
+
+     @c@afourpaper
+
+In Texinfo, a line is commented with ‘@c’.  Therefore, uncomment this
+line by deleting the first two characters such that it changes to:
+
+     @afourpaper
+
+Save the file and close it.  You can now run
+
+     $ cd SRCDIR
+     $ make pdf
+
+and the new pdf manual will be available in ‘SRCDIR/doc/jpgtofits.pdf’.
+By changing the ‘pdf’ in ‘$ make pdf’ to ‘ps’ or ‘dvi’ you can have the
+manual in those formats.  Note that you can do this for any manual that
+is in Texinfo format, they might not have
+
+
+File: jpgtofits.info,  Node: Running,  Next: Future updates,  Prev: Installation,  Up: Top
+
+3 Running JPGtoFITS
+*******************
+
+The most basic way to run JPGtoFITS is with the command ‘$ jpgtofits
+JPEGimage.jpg’.  This will create a FITS image which is named
+‘JPEGimage.fits’ in the current directory.
+
+   JPGtoFITS only has one mandatory argument: the input JPEG image name
+(which has to end in ‘.jpg’, ‘.jpeg’, ‘.JPG’ or ‘.JPEG’).  The output
+FITS name can also be given as an argument but it is optional.  If no
+FITS image name is given as an argument, then the name of the output
+will be determined from the input file’s name.  All the potential
+directory structure attached to it stripped off and the ending is
+changed to ‘.fits’.  For example:
+
+     $ pwd
+     /home/username/FITSfiles
+     $ ls
+     ABC001.fits
+     $ jpgtofits /home/username/JPEGarchive/ABC002.jpg
+     $ ls
+     ABC001.fits ABC002.fits
+
+   Besides the input JPEG image, you can also _optionally_ specify the
+name of the output FITS image on the command line without any options.
+Any name that ends with ‘.fits’ will be considered as an output FITS
+image name.  Note that if it already exists, the existing file will
+silently be replaced.
+
+* Menu:
+
+* Getting help::                Guidelines on getting help.
+* Command line options::        Command line options.
+
+
+File: jpgtofits.info,  Node: Getting help,  Next: Command line options,  Prev: Running,  Up: Running
+
+3.1 Getting help
+================
+
+So you are busy writing doing your work but you have forgot the names of
+the options or the default values.  You don’t feel like finding the PDF
+file you might have saved or printed in your archives or to go to the
+internet.  You want to get back to your exciting work as fast as
+possible.  Here are some ways you can get to what you want very fast.
+Note that these apply to most GNU/Linux programs, not just JPGtoFITS.
+
+   • The easiest and fastest way is to run ‘$ jpgtofits --help’.  This
+     will print a list of all the options, their default values and a
+     short description.  The default values for each option with a value
+     are specified inside square brackets immediately before the
+     explanation for that option, for example:
+          -K, --keepnamedir          Keep directory information for output.
+
+   • If you know the values you want to supply but forgot the exact
+     short option characters or long option name, you can run ‘$
+     jpgtofits --usage’.  This will give you a compact but full list of
+     all the options in both short and long format.
+
+   • In case you need more information than ‘--help’ can provide, and
+     you think a look through the manual would be great, run
+          $ info jpgtofits
+     This will open up this whole document in the command line and you
+     can easily navigate it using the fabulously easy and useful ‘info’
+     program.  In case you are not familiar with it already, put aside
+     half an hour of your time and run ‘$ info info’, it does a
+     fantastic job in explaining all its capabilities its self.  Since
+     all GNU software documentation is also provided in info, your whole
+     GNU/Linux life will significantly become easier.  Once your become
+     efficient in it, you can navigate to any part of this manual or any
+     other GNU software manual, no matter how long it is, in a matter of
+     seconds.  It also blends nicely with GNU Emacs (a text editor) and
+     you can search manuals while you are writing your document or
+     programs without taking your hands off the keyboard.
+
+
+File: jpgtofits.info,  Node: Command line options,  Prev: Getting help,  Up: Running
+
+3.2 Command line options
+========================
+
+You can specify the behavior of JPGtoFITS with command line options.
+The same rules that specify the command line options in nearly all
+GNU/Linux programs also apply for JPGtoFITS, here are some of the
+factors:
+
+   • Each option can be called in two ways: _short_ or _long_.  In the
+     list below, for options that have both formats, first the short is
+     shown then the long.  Short options are only one character and only
+     have one hyphen (for example ‘-e’) while long options have two
+     hyphens an can have many characters (for example ‘--imgext’.
+
+   • Some options need to be given a value if they are called and some
+     don’t.  You can think of the latter type of options as an on/off
+     option.  In JPGtoFITS’s ‘--help’ output, if a value is required,
+     one of the three cases below follows the long option:
+
+        • ‘=STR’: The value is read as a strong (for example a file
+          name).
+
+     In this manual, the same values will be put immediately before the
+     explanation, for example (‘=STR’).
+
+   • To specify a value in the short format, simply put the value after
+     the option (with or without white space).  For the long option you
+     either need white space or an ‘=’ sign, for example ‘-e2’, ‘-e 2’,
+     ‘--imgext 2’ or ‘--imgext=2’ are all equivalent.
+
+   • Short options with no values can be concatenated for example the
+     hypothetical options ‘-a -b -c4’ is equivalent to ‘-abc4’.
+
+   • In the long format, you don’t have to write the full option name,
+     only long enough for the option to be unambiguously identified.  If
+     it is ambiguous, then JPGtoFITS will warn you.
+
+   Currently JPGtoFITS doesn’t have too many options.  In the future
+more options will be added.
+
+* Menu:
+
+* Options::                     Command line options for JPGtoFITS
+
+
+File: jpgtofits.info,  Node: Options,  Prev: Command line options,  Up: Command line options
+
+3.2.1 Options
+-------------
+
+These options that JPGtoFITS currently accepts:
+
+‘-?’
+‘--help’
+     Print out a short help message showing all the options with a brief
+     explanation, see *note Getting help::.
+
+‘-f’
+‘--hflip’
+     If you simply convert the pixels of a JPEG image to a FITS image,
+     the image will be flipped along the horizontal axis when you look
+     at it in a FITS image viewer, for example SAO ds9.  So by default,
+     JPGtoFITS will flip the image along the horizontal axis passing
+     through the center of the image to make it look the same.  If you
+     call this option, the default behaviour is not used.  There is no
+     interpolation in the flipping process, so you can be sure about the
+     pixel values remaining unchanged.
+
+‘-K’
+‘--keepnamedir’
+     By default the directory information of the output name will be
+     stripped off so the output will be in the current directory with
+     the file name of the output name.  If you call this option, the
+     full directory structure will remain for the output too.  Note that
+     this applies both to the cases where you set an output name as an
+     argument or as a value to the ‘--output’ option.
+
+‘-o’
+‘--output’
+     Specify the name of the output file, possibly with directory
+     information and in any kind of file name extension.
+
+‘--usage’
+     Print a very compact list of all the options.
+
+‘-V’
+‘--version’
+     Print the version and copyright information.
+
+
+File: jpgtofits.info,  Node: Future updates,  Next: Index,  Prev: Running,  Up: Top
+
+4 Future updates
+****************
+
+There are many things to do, this is my current to-do list.  I will try
+to implement them when ever I get some time.  Currently I don’t have any
+rush because I don’t immediately need these capabilities.  But as soon
+as I find some free time they will be implemented.  If you feel these
+updates, or other updates can be useful for your work, please contact me
+so we can implement them.  If you are familiar enough with the C
+programming language, it would be great if you could also contribute so
+it can be done faster.  Of course, all contributions will be
+respectfully acknowledged.
+
+   In case you have any suggestions which you would like JPGtoFITS to
+do, please also inform me to add to this list and implement in due time.
+
+   • Only convert a portion of the FITS image.
+
+   • Set pixel value thresholds.
+
+   • Check and make the building and installation process work on Mac
+     and possibly MS-Windows systems too.  I have no experience on them
+     and don’t have any systems running them, so I would need someone
+     else’s help.
+
+
+File: jpgtofits.info,  Node: Index,  Prev: Future updates,  Up: Top
+
+Index
+*****
+
+ [index ]
+* Menu:
+
+* --help:                                Options.              (line  9)
+* --hflip:                               Options.              (line 14)
+* --keepnamedir:                         Options.              (line 25)
+* --output:                              Options.              (line 34)
+* --usage:                               Options.              (line 38)
+* --version:                             Options.              (line 42)
+* -?:                                    Options.              (line  8)
+* -f:                                    Options.              (line 13)
+* -K:                                    Options.              (line 24)
+* -o:                                    Options.              (line 33)
+* -V:                                    Options.              (line 41)
+* A4 paper size:                         Print manual.         (line  6)
+* Build:                                 Quick start.          (line  6)
+* CFITSIO:                               CFITSIO.              (line  6)
+* Check:                                 Quick start.          (line  6)
+* Checking tests:                        Tests.                (line  6)
+* CMYK:                                  FITSJPEGcolor.        (line 15)
+* Colorspace:                            FITSJPEGcolor.        (line 15)
+* Colorspace, grayscale:                 FITSJPEGcolor.        (line 15)
+* Compile:                               Quick start.          (line  6)
+* Dependencies, JPGtoFITS:               Requirements.         (line  6)
+* Directory, install:                    Configuring.          (line 20)
+* Example, quick:                        Quick start.          (line 28)
+* Example, quick <1>:                    Running.              (line  6)
+* FITS:                                  Overview.             (line  6)
+* FITS standard:                         FITSJPEGcolor.        (line  6)
+* Free software:                         Free software.        (line  6)
+* Freedom:                               Free software.        (line  6)
+* Grayscale:                             FITSJPEGcolor.        (line 15)
+* Image:                                 FITSJPEGcolor.        (line 15)
+* Install directory:                     Configuring.          (line 20)
+* JPEG:                                  Overview.             (line  6)
+* JPGtoFITS dependencies:                Requirements.         (line  6)
+* libjpeg:                               libjpeg.              (line  6)
+* ‘make check’:                          Tests.                (line  6)
+* ‘mock.fits’:                           Tests.                (line  6)
+* Modifying print manual:                Print manual.         (line  6)
+* Package managers:                      libjpeg.              (line 18)
+* Paper size, A4:                        Print manual.         (line  6)
+* Paper size, US letter:                 Print manual.         (line  6)
+* Primary colors:                        FITSJPEGcolor.        (line 15)
+* Print manual:                          Print manual.         (line  6)
+* Quick example:                         Quick start.          (line 28)
+* Results of tests:                      Tests.                (line 15)
+* RGB:                                   FITSJPEGcolor.        (line 15)
+* root, not possible:                    Configuring.          (line 13)
+* Shell test scripts:                    Tests.                (line 21)
+* SIMD instructions:                     libjpeg.              (line  6)
+* Software, free:                        Free software.        (line  6)
+* Source, uncompress:                    Quick start.          (line  6)
+* Standard, FITS:                        FITSJPEGcolor.        (line  6)
+* Standard, JPEG:                        FITSJPEGcolor.        (line  6)
+* Superuser, not possible:               Configuring.          (line 13)
+* Test:                                  Quick start.          (line  6)
+* Tests, ‘.sh’ scripts:                  Tests.                (line 21)
+* Tests, results:                        Tests.                (line 15)
+* Tests, running:                        Tests.                (line  6)
+* Uncompress source:                     Quick start.          (line  6)
+* US letter paper size:                  Print manual.         (line  6)
+
+
+
+Tag Table:
+Node: Top844
+Node: Overview2643
+Node: Quick start3682
+Node: FITSJPEGcolor5205
+Node: Free software7661
+Node: Installation8392
+Node: Requirements9064
+Node: libjpeg9489
+Node: CFITSIO10518
+Node: Installing JPGtoFITS11865
+Node: Configuring13798
+Node: Tests15018
+Node: Print manual16704
+Node: Running18041
+Node: Getting help19422
+Node: Command line options21667
+Node: Options23685
+Node: Future updates25290
+Node: Index26468
+
+End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:

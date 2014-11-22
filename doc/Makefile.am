@@ -1,6 +1,6 @@
-## Process this file with autoconf to produce a configure script.
+## Process this file with automake to produce Makefile.in
 ##
-## Hand written file: used as input into GNU Autotools (autoconf).
+## Hand written file: used as input into Autotools.
 ##
 ## NOTE:
 ## This file will be called by the Makefile.am in the top directory,
@@ -15,8 +15,4 @@
 ## Tohoku University Astronomical Institute, Sendai, Japan.
 ## http://astr.tohoku.ac.jp/~akhlaghi/
 
-SUBDIRS = src doc
-
-dist_doc_DATA = README
-
-EXTRA_DIST = src/autumnintohoku.jpg src/simple.sh src/anothername.sh
+info_TEXINFOS = jpgtofits.texi

@@ -445,8 +445,8 @@ AM_LDFLAGS = -lcfitsio -ljpeg -lm
 jpgtofits_SOURCES = main.c main.h ui.c ui.h fitsarrayvv.c	\
 fitsarrayvv.h readjpg.c readjpg.h argpparser.h
 
-TESTS = simple.sh
-CLEANFILES = autumnintohoku.fits
+TESTS = simple.sh anothername.sh
+CLEANFILES = autumnintohoku.fits anothername.fits
 all: all-am
 
 .SUFFIXES:
@@ -749,6 +749,13 @@ recheck: all
 simple.sh.log: simple.sh
 	@p='simple.sh'; \
 	b='simple.sh'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+anothername.sh.log: anothername.sh
+	@p='anothername.sh'; \
+	b='anothername.sh'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

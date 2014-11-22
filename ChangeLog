@@ -1,7 +1,12 @@
+2014-11-22  Mohammad Akhlaghi  <makhlaghi@gmail.com>
+
+	* src/Makefile.am: Added anothername.sh as another test.
+
+	* doc/jpgtofits.texi: Added Texinfo documentation.
+
 2014-11-21  Mohammad Akhlaghi  <makhlaghi@gmail.com>
 
 	Version 0.1: Complying with GNU coding standards.
-	
 	* src/ui.h: Unified copyright and changed function name.
 
 	* src/ui.c: Unified copyright,

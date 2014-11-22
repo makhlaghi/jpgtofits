@@ -24,5 +24,5 @@ jpgtofits_SOURCES = main.c main.h ui.c ui.h fitsarrayvv.c	\
 fitsarrayvv.h readjpg.c readjpg.h argpparser.h
 
 ## Necessary commands for `make check`:
-TESTS = simple.sh
-CLEANFILES = autumnintohoku.fits
+TESTS = simple.sh anothername.sh
+CLEANFILES = autumnintohoku.fits anothername.fits

@@ -31,7 +31,8 @@ AC_CHECK_FUNCS([strtol])
 
 #Tell configure which files to work on:
 AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+                 src/Makefile
+		 doc/Makefile])
 
 #Read the configuration date.
 AC_MSG_CHECKING([for date of configuration])

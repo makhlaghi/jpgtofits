@@ -1,4 +1,4 @@
-jpgtofits
+JPGtoFITS
 =========
 
 Convert a JPEG image to a FITS file (colors as FITS extensions).
